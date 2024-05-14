@@ -13,7 +13,7 @@ on:
       - "**"
 
 jobs:
-  ubuntu-20-04:
+  ubuntu-22-04:
     name: LLVM ${{ matrix.LLVM_VERSION }}
     runs-on: ubuntu-latest
     container: ubuntu:22.04
@@ -21,7 +21,6 @@ jobs:
       matrix:
         LLVM_VERSION: [13, 14, 15]
     env:
-      DISTR_REPO: "ubuntu/jammy"
       DEBIAN_FRONTEND: noninteractive
 
     steps:
@@ -65,8 +64,9 @@ jobs:
       - name: Publish package
         if: env.CLOUDSMITH_API_KEY != null
         run: |
+          UBUNTU_CODENAME=$(. /etc/os-release; echo "${UBUNTU_CODENAME/*, /}")
           cloudsmith push deb \
-            mull-project/mull-${{ steps.metadata.outputs.channel }}/${{ env.DISTR_REPO }} \
+            mull-project/mull-${{ steps.metadata.outputs.channel }}/ubuntu/${UBUNTU_CODENAME} \
             infrastructure/packages/`cat infrastructure/PACKAGE_FILE_NAME`.deb
 
       - name: Move package

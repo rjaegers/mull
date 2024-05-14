@@ -21,7 +21,6 @@ jobs:
       matrix:
         LLVM_VERSION: [12]
     env:
-      DISTR_REPO: "ubuntu/focal"
       DEBIAN_FRONTEND: noninteractive
 
     steps:
@@ -65,8 +64,9 @@ jobs:
       - name: Publish package
         if: env.CLOUDSMITH_API_KEY != null
         run: |
+          UBUNTU_CODENAME=$(. /etc/os-release; echo "${UBUNTU_CODENAME/*, /}")
           cloudsmith push deb \
-            mull-project/mull-${{ steps.metadata.outputs.channel }}/${{ env.DISTR_REPO }} \
+            mull-project/mull-${{ steps.metadata.outputs.channel }}/ubuntu/${UBUNTU_CODENAME} \
             infrastructure/packages/`cat infrastructure/PACKAGE_FILE_NAME`.deb
 
       - name: Move package
