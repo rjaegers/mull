@@ -1,4 +1,4 @@
-name: Ubuntu 22.04 CI
+name: Ubuntu CI
 
 env:
   CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -13,13 +13,23 @@ on:
       - "**"
 
 jobs:
-  ubuntu-22-04:
-    name: LLVM ${{ matrix.LLVM_VERSION }}
+  ubuntu:
+    name: Ubuntu ${{ matrix.UBUNTU_VERSION }} LLVM ${{ matrix.LLVM_VERSION }}
     runs-on: ubuntu-latest
-    container: ubuntu:22.04
+    container: ubuntu:${{ matrix.UBUNTU_VERSION }}
     strategy:
       matrix:
-        LLVM_VERSION: [13, 14, 15]
+        UBUNTU_VERSION: ["22.04", "24.04"]
+        LLVM_VERSION: [14, 15]
+        include:
+          - UBUNTU_VERSION: "20.04"
+            LLVM_VERSION: 12
+          - UBUNTU_VERSION: "22.04"
+            LLVM_VERISON: 13
+          - UBUNTU_VERSION: "24.04"
+            LLVM_VERSION: 16
+          - UBUNTU_VERSION: "24.04"
+            LLVM_VERSION: 17
     env:
       DEBIAN_FRONTEND: noninteractive
 
@@ -31,15 +41,17 @@ jobs:
 
       - name: Install software
         run: |
-          apt-get update && apt-get install -y software-properties-common
-          add-apt-repository ppa:git-core/ppa
-          apt-get update && apt-get install -y python3-pip curl git libunwind8
+          apt-get update && apt-get install --no-install-recommends -y python3-pip curl libunwind8
           pip3 install ansible
 
-      - name: Install git
+      - name: Add git ppa
+        if: matrix.UBUNTU_VERSION != "24.04"
         run: |
-          apt-get update
-          apt-get install -y git
+          apt-get update && apt-get install --no-install-recommends -y software-properties-common
+          add-apt-repository ppa:git-core/ppa
+
+      - name: Install git
+          apt-get update && apt-get install --no-install-recommends -y git
           git config --global --add safe.directory $PWD
 
       - name: Checkout sources
