@@ -45,7 +45,7 @@ jobs:
           pip3 install ansible
 
       - name: Add git ppa
-        if: ${{ matrix.UBUNTU_VERSION != "24.04" }}
+        if: matrix.UBUNTU_VERSION != '24.04'
         run: |
           apt-get update && apt-get install --no-install-recommends -y software-properties-common
           add-apt-repository ppa:git-core/ppa
