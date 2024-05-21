@@ -47,7 +47,7 @@ jobs:
       - name: Add git ppa
         if: matrix.UBUNTU_VERSION != '24.04'
         run: |
-          apt-get update && apt-get install --no-install-recommends -y software-properties-common
+          apt-get update && apt-get install --no-install-recommends -y gpg-agent software-properties-common
           add-apt-repository ppa:git-core/ppa
 
       - name: Install git
