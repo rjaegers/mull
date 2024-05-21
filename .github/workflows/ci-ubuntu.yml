@@ -40,6 +40,9 @@ jobs:
           cat $GITHUB_EVENT_PATH
 
       - name: Install software
+        env:
+          # Necessary for Ubuntu 24.04 since PEP 668
+          PIP_BREAK_SYSTEM_PACKAGES: 1
         run: |
           apt-get update && apt-get install --no-install-recommends -y python3-pip curl libunwind8
           pip3 install ansible
