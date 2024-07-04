@@ -84,9 +84,9 @@ const clang::FileEntry *ThreadSafeASTUnit::findFileEntry(const std::string &file
     /// In LLVM 6, it->first->getName() does not expand to full path for header files.
     if (!llvm::sys::path::is_absolute(currentSourceFilePath)) {
 #if LLVM_VERSION_MAJOR >= 18
-      currentSourceFilePath = it->first->tryGetRealPathName();
-#else
       currentSourceFilePath = it->first.getFileEntry().tryGetRealPathName();
+#else
+      currentSourceFilePath = it->first->tryGetRealPathName();
 #endif
     }
     llvm::SmallString<PATH_MAX> realFilePath;
