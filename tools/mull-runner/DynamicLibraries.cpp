@@ -161,7 +161,11 @@ bool mull::hasCoverage(mull::Diagnostics &diagnostics, const std::string &path) 
   }
 
   for (auto &section : objectFile->sections()) {
+#if LLVM_VERSION_MAJOR >= 18
+    if (getSectionName(section).ends_with("llvm_covmap")) {
+#else
     if (getSectionName(section).endswith("llvm_covmap")) {
+#endif
       return true;
     }
   }

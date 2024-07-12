@@ -16,7 +16,11 @@ void ASTInstrumentation::instrumentTranslationUnit() {
                                      context.getTranslationUnitDecl(),
                                      NULL_LOCATION,
                                      NULL_LOCATION,
+#if LLVM_VERSION_MAJOR >= 18
+                                     clang::LinkageSpecLanguageIDs::C,
+#else
                                      clang::LinkageSpecDecl::LanguageIDs::lang_c,
+#endif
                                      true);
   getenvFuncDecl = createGetEnvFuncDecl(cLinkageSpecDecl);
   cLinkageSpecDecl->addDecl(getenvFuncDecl);
