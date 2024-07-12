@@ -43,8 +43,6 @@ llvm_mapping:
       packages:
         - llvm-18-dev
         - libclang-18-dev
-        - libc++-18-dev
-        - libc++abi-18-dev
         - clang-18
       cmake_cc: clang-18
       cmake_cxx: clang++-18
