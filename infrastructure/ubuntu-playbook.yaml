@@ -19,7 +19,6 @@
       - sqlite3
       - libsqlite3-dev
       - ncurses-dev
-      - libstdc++6
       - binutils
       - liblzma-dev
       - python3-pip
